@@ -1,0 +1,21 @@
+.go_back {
+    margin: 2px;
+}
+
+.save_btn {
+    margin: 2px;
+} 
+
+a, .save_btn {
+    text-decoration: none;
+    color: black;
+}
+
+.input {
+    margin: 2px;
+}
+
+#message {
+    color: #F00;
+    font-size: 16px;
+}

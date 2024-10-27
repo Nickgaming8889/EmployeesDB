@@ -1,0 +1,41 @@
+body {
+    margin: 5px;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.table {
+    width: 80%;
+    max-width: 800px;
+    display: flex;
+    flex-direction: column;
+}
+
+.title {
+    display: flex;
+    justify-content: space-between;
+}
+
+.title .column {
+    flex: 1;
+    padding: 5px;
+}
+
+.employee {
+    display: flex;
+    padding: 12px 0;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+}
+
+.add {
+    text-decoration: none;
+    color: black;
+}
