@@ -21,6 +21,7 @@
             </div>
             <div class="input">
                 <input type="email" name="email" id="email" placeholder="Email" required>
+                <div id="emailMessage" class="error-message"></div> <!-- Message for email validation status -->
             </div>
             <div class="input">
                 <input type="password" name="password" id="password" placeholder="Password" required>
@@ -38,5 +39,34 @@
         </div>
         <div id="message" class="error-message"></div>        
     </form>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function() {
+            $('#email').on('blur', function() {
+                var email = $(this).val();
+                if (email) {
+                    $.ajax({
+                        type: 'POST',
+                        url: '../employees_functions/emailValidation.php',
+                        data: { email: email },
+                        dataType: 'json',
+                        success: function(response) {
+                            if (response.status === 'exists') {
+                                $('#emailMessage').text(response.message).css('color', 'red');
+                            } else {
+                                $('#emailMessage').text(response.message).css('color', 'green');
+                            }
+                        },
+                        error: function() {
+                            $('#emailMessage').text('Error validating email.').css('color', 'red');
+                        }
+                    });
+                } else {
+                    $('#emailMessage').text('');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
