@@ -11,7 +11,7 @@
     <div class="go_back">
         <button><a href="employees_list.php">List</a></button>
     </div>
-    <form id="formRegistrarEmpleado" action="employees_save.php" method="post">
+    <form id="formRegistrarEmpleado" action="employees_list.php" method="post">
         <div class="register_inputs">
             <div class="input">
                 <input type="text" name="name" id="name" placeholder="First Name" required>
