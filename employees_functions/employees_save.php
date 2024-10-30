@@ -21,7 +21,7 @@
             $stmt->bindParam(':rol', $rol);
             $stmt->execute();
 
-            header("Location: employees_list.php");
+            //header("Location: employees_list.php");
             exit();
         } 
         catch (PDOException $e) {
