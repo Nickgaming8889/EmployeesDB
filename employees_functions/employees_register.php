@@ -39,34 +39,33 @@
         </div>
         <div id="message" class="error-message"></div>        
     </form>
-
+</body>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script>
-        $(document).ready(function() {
-            $('#email').on('blur', function() {
-                var email = $(this).val();
-                if (email) {
-                    $.ajax({
-                        type: 'POST',
-                        url: '../employees_functions/emailValidation.php',
-                        data: { email: email },
-                        dataType: 'json',
-                        success: function(response) {
-                            if (response.status === 'exists') {
-                                $('#emailMessage').text(response.message).css('color', 'red');
-                            } else {
-                                $('#emailMessage').text(response.message).css('color', 'green');
-                            }
-                        },
-                        error: function() {
-                            $('#emailMessage').text('Error validating email.').css('color', 'red');
-                        }
-                    });
-                } else {
-                    $('#emailMessage').text('');
+$(document).ready(function() {
+    $('#email').on('blur', function() {
+        var email = $(this).val();
+        if (email) {
+            $.ajax({
+                type: 'POST',
+                url: 'email_validation.php',
+                data: { email: email },
+                dataType: 'json',
+                success: function(response) {
+                    if (response.exists) {
+                        $('#emailMessage').text('Este correo electrónico ya está en uso.').css('color', 'red');
+                    } else {
+                        $('#emailMessage').text('Este correo electrónico está disponible.').css('color', 'green');
+                    }
+                },
+                error: function() {
+                    $('#emailMessage').text('Error al validar el correo electrónico.').css('color', 'red');
                 }
             });
-        });
-    </script>
-</body>
+        } else {
+            $('#emailMessage').text('');
+        }
+    });
+});
+</script>
 </html>
