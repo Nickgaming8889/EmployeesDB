@@ -27,8 +27,8 @@
 
                 // Si los campos están llenos, enviar el formulario usando AJAX
                 $.ajax({
-                    url: 'login.php', // URL del archivo PHP que procesa el inicio de sesión
                     type: 'POST',
+                    url: 'login.php', // URL del archivo PHP que procesa el inicio de sesión
                     data: {
                         email: email,
                         password: pass
