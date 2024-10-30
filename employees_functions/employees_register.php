@@ -1,3 +1,6 @@
+<?php
+    require_once "../connectionDB.php";
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,23 +14,23 @@
     <div class="go_back">
         <button><a href="employees_list.php">List</a></button>
     </div>
-    <form id="formRegistrarEmpleado" action="employees_list.php" method="post">
+    <form id="formRegistrarEmpleado" action="employees_save.php" method="post">
         <div class="register_inputs">
             <div class="input">
-                <input type="text" name="name" id="name" placeholder="First Name" required>
+                <input type="text" name="name" id="name" placeholder="First Name">
             </div>
             <div class="input">
-                <input type="text" name="surname" id="surname" placeholder="Surnames" required>
+                <input type="text" name="surname" id="surname" placeholder="Surnames">
             </div>
             <div class="input">
-                <input type="email" name="email" id="email" placeholder="Email" required>
-                <div id="emailMessage" class="error-message"></div> <!-- Message for email validation status -->
+                <input type="email" name="email" id="email" placeholder="Email">
+                <div id="emailMessage" class="error-message"></div>
             </div>
             <div class="input">
-                <input type="password" name="password" id="password" placeholder="Password" required>
+                <input type="password" name="password" id="password" placeholder="Password">
             </div>
             <div class="input">
-                <select name="rol" id="rol" required>
+                <select name="rol" id="rol">
                     <option value="">Select Role</option>
                     <option value="1">Gerente</option>
                     <option value="2">Ejecutivo</option>
@@ -37,22 +40,30 @@
         <div class="save_register">
             <button type="submit" class="save_btn">Guardar</button>
         </div>
-        <div id="message" class="error-message"></div>        
+        <div id="message" class="error-message"></div>
     </form>
-</body>
+
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
     <script>
-$(document).ready(function() {
-    $('#email').on('blur', function() {
-        var email = $(this).val();
-        if (email) {
+    $(document).ready(function() {
+        $('#email').on('blur', function() {
+            var email = $(this).val();
+            var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!emailPattern.test(email)) {
+                $('#emailMessage').text('Por favor, introduce un correo electrónico válido.').css('color', 'red');
+                return;
+            }
+
             $.ajax({
                 type: 'POST',
-                url: 'email_validation.php',
+                url: 'validate_email.php',
                 data: { email: email },
                 dataType: 'json',
                 success: function(response) {
-                    if (response.exists) {
+                    if (response.error) {
+                        $('#emailMessage').text(response.error).css('color', 'red');
+                    } else if (response.exists) {
                         $('#emailMessage').text('Este correo electrónico ya está en uso.').css('color', 'red');
                     } else {
                         $('#emailMessage').text('Este correo electrónico está disponible.').css('color', 'green');
@@ -62,10 +73,53 @@ $(document).ready(function() {
                     $('#emailMessage').text('Error al validar el correo electrónico.').css('color', 'red');
                 }
             });
-        } else {
-            $('#emailMessage').text('');
+        });
+
+        $('#formRegistrarEmpleado').on('submit', function(event) {
+        event.preventDefault();
+
+        $('#message').text('').removeClass('error-message');
+
+        var name = $('#name').val();
+        var surname = $('#surname').val();
+        var email = $('#email').val();
+        var password = $('#password').val();
+        var rol = $('#rol').val();
+
+        if (name === "" || surname === "" || email === "" || password === "" || rol === "") {
+            $('#message').text('Todos los campos son obligatorios.').css('color', 'red');
+            mostrarMensajeTemporal('#message');
+            return;
         }
+
+        // Aquí se envían los datos del formulario
+        $.ajax({
+            type: 'POST',
+            url: 'employees_save.php',
+            data: {
+                name: name,
+                surname: surname,
+                email: email,
+                password: password,
+                rol: rol
+            },
+            success: function(response) {
+                // Si el registro es exitoso, redirigir a employees_list.php
+                window.location.href = 'employees_list.php';
+            },
+            error: function() {
+                $('#message').text('Error al registrar el empleado.').css('color', 'red');
+                mostrarMensajeTemporal('#message');
+            }
+        });
     });
-});
-</script>
+
+    function mostrarMensajeTemporal(selector) {
+        setTimeout(function() {
+            $(selector).text('').removeClass('error-message');
+        }, 5000);
+    }
+    });
+    </script>
+</body>
 </html>

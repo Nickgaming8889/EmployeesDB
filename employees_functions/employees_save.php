@@ -14,14 +14,17 @@
             $rol = $_POST['rol'];
 
             $full_name = $name ." ". $surname;
+            $plainPassword = 'password'; // La contraseña en texto plano que el usuario ingresa
+            $hashedPassword = password_hash($plainPassword, PASSWORD_DEFAULT);
 
-            $stmt = $conn->prepare("INSERT INTO empleados (nombre, correo, rol) VALUES (:fullname, :email, :rol)");
+            $stmt = $conn->prepare("INSERT INTO empleados (nombre, correo, rol, contra) VALUES (:fullname, :email, :rol, :password)");
             $stmt->bindParam(':fullname', $full_name);
             $stmt->bindParam(':email', $email);
             $stmt->bindParam(':rol', $rol);
+            $stmt->bindParam(':password', $hashedPassword);
             $stmt->execute();
 
-            //header("Location: employees_list.php");
+            header("Location: employees_list.php");
             exit();
         } 
         catch (PDOException $e) {

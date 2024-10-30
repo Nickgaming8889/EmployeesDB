@@ -1,7 +1,7 @@
 <?php
     $servername = "127.0.0.1";
-    $username = "nicholas";
-    $password = "1968";
+    $username = "root";
+    $password = "";
     $dbname = "test";
 
     try {
@@ -9,10 +9,8 @@
         $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $sql = "CREATE DATABASE $dbname";
         $result = $conn->query($sql);
-        echo "Connection Successfully";
     }
-    catch (PDOException $e) {
-        echo "Connection Failed: ". $e->getMessage();
+    catch (PDOException $e) {        
     }
 
     $conn = null;
