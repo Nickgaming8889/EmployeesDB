@@ -38,13 +38,14 @@
                     },
                     success: function(response) {
                         // Manejar la respuesta del servidor
-                        alert(response);
-                        if (response == 'error') {
+                        
+                        var arrg = JSON.parse(response);
+                        if (arrg.error) {
+                            alert(arrg.error);
                             console.log("zzz");
-                            messageDiv.text(response.error).addClass('error-message');
+                            messageDiv.text(arrg.error).addClass('error-message');
                         }else {
                             // Redirigir o mostrar un mensaje de éxito
-                            console.log("as");
                             window.location.href = 'dashboard.php'; // Redirigir a otra página
                             
                         }
