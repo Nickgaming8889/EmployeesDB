@@ -2,74 +2,77 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="../styles/index.css">
-    <title>Log In</title>
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-    <script>
-        $(document).ready(function() {
-            $('form').on('submit', function(event) {
-                event.preventDefault(); // Evita que el formulario se envíe de inmediato
-
-                // Obtener los valores de los campos
-                var email = $('#email').val();
-                var pass = $('#pass').val();
-                var messageDiv = $('#message');
-
-                // Limpiar el mensaje anterior
-                messageDiv.text('').removeClass('error-message');
-
-                // Validar que los campos no estén vacíos
-                if (email === "" || pass === "") {
-                    messageDiv.text("Todos los campos son obligatorios.").addClass('error-message');
-                    return; // Detener la ejecución si hay un campo vacío
-                }
-
-                // Si los campos están llenos, enviar el formulario usando AJAX
-                $.ajax({
-                    type: 'POST',
-                    url: 'login.php', // URL del archivo PHP que procesa el inicio de sesión
-                    data: {
-                        email: email,
-                        password: pass
-                    },
-                    error: function (jqXHR, textStatus, errorThrown) {
-                        alert(textStatus, errorThrown);
-                    },
-                    success: function(response) {
-                        // Manejar la respuesta del servidor
-                        
-                        var arrg = JSON.parse(response);
-                        if (arrg.error) {
-                            alert(arrg.error);
-                            console.log("zzz");
-                            messageDiv.text(arrg.error).addClass('error-message');
-                        }else {
-                            // Redirigir o mostrar un mensaje de éxito
-                            window.location.href = 'dashboard.php'; // Redirigir a otra página
-                            
-                        }
-                    }
-                });
-            });
-        });
-    </script>
+    <title>Welcome</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .error {
+            color: red;
+        }
+        .message {
+            margin-top: 10px;
+            color: green;
+        }
+    </style>
 </head>
 <body>
-    <h1>Log in</h1>
+    <h1>Welcome to Our Application</h1>
 
-    <form method="POST" id="form">
-        <div class="input">
-            <input type="email" name="email" id="email" placeholder="Email">
-        </div>
-        <div class="input">
-            <input type="password" name="pass" id="pass" placeholder="Password">
-        </div>
-        <div class="submit">
-            <button type="submit">Log in</button>
-        </div>
+    <h2>Login</h2>
+    <form id="loginForm" method="POST">
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email"><br><br>
+
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password"><br><br>
+
+        <input type="submit" value="Login">
     </form>
 
-    <div id="message" class="error-message"></div>
+    <div class="message" id="message"></div>
 </body>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script>
+        $('#loginForm').submit(function(event) {
+            event.preventDefault();
+
+            const email = $('#email').val();
+            const password = $('#password').val();
+            const messageDiv = $('#message');
+
+            if (email === "" || password === "") {
+            $('#message').text('Todos los campos son obligatorios.').css('color', 'red');
+            mostrarMensajeTemporal('#message');
+            return;
+        }
+
+            $.ajax ({
+                url: 'login.php',
+                type: 'POST',
+                data: {
+                    email: email,
+                    password: password
+                },
+                dataType: 'json',
+                success: function(response) {
+                    messageDiv.text(response.message);
+
+                    if (response.status === 'success') {
+                            window.location.href = response.redirect;
+                    }
+                },
+                error:  function(xhr, status, error) {
+                    messageDIV.text('Error: '+ xhr.responseText);
+                    console.error("Error details: ", error, xhr.responseText);
+                }
+            });
+        });
+
+        
+    </script>
 </html>
