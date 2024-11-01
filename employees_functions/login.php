@@ -1,49 +1,50 @@
 <?php
-    require_once "../connectionDB.php";
+// Enable error reporting for debugging purposes
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        try {
-            $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+session_start();
+require_once "../connectionDB.php"; // Include the database connection
 
-            $email = $_POST['email'];
-            $userPassword = $_POST['password'];
+if (isset($_POST['email']) && isset($_POST['password'])) {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
 
-            $stmt = $conn->prepare("SELECT * FROM empleados WHERE email = :email");
-            $stmt->bindParam(':email', $email);
-            $stmt->execute();
+    try {
+        // Check if the user exists in the database
+        $sql = "SELECT * FROM empleados WHERE correo = :email";
+        $stmt = $conn->prepare($sql);
+        $stmt->bindParam(':email', $email);
+        $stmt->execute();
 
-            if ($stmt->rowCount() > 0) {
-                $user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-                // Verificar si la contraseña está almacenada
-                if ($user['contra'] == NULL) {
-                    echo "error";
-                    //echo json_encode(['error' => 'No se ha establecido una contraseña para este usuario.']);
-                    exit();
-                }
-
-                // Comprobar la contraseña
-                if (password_verify($userPassword, $user['contra'])) {
-                    session_start();
-                    $_SESSION['user_id'] = $user['id'];
-                    header("Location: dashboard.php");
-                    exit();
-                } else {
-                    echo "error";
-                    //echo json_encode(['error' => 'Contraseña incorrecta.']);
-                }
+        if ($stmt->rowCount() > 0) {
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            
+            // Assuming there is a `clave` (password) field in `empleados`
+            if (password_verify($password, $row['contra'])) {
+                // Login successful
+                $_SESSION['user_id'] = $row['id'];
+                $_SESSION['nombre'] = $row['nombre']; // Store user name for reference
+                $_SESSION['eliminar'] = $row['eliminar'];
+                $_SESSION['ver_detalle'] = $row['ver_detalle'];
+                $_SESSION['editar'] = $row['editar'];
+                
+                // Return a JSON response for successful login
+                echo json_encode(['status' => 'success', 'message' => 'Login successful! Redirecting...', 'redirect' => 'dashboard.php']);
             } else {
-                echo "error";
-                //echo json_encode(['error' => 'Correo electrónico no encontrado.']);
+                // Incorrect password
+                echo json_encode(['status' => 'error', 'message' => 'Incorrect password.']);
             }
-        } catch (PDOException $e) {
-            echo "error";
-            //echo json_encode(['error' => $e->getMessage()]);
+        } else {
+            // User does not exist
+            echo json_encode(['status' => 'error', 'message' => 'User not found.']);
         }
-
-        $conn = null;
-    }else{
-        $conn = null;
+    } catch (Exception $e) {
+        // Handle any database errors
+        echo json_encode(['status' => 'error', 'message' => 'Database error: ' . $e->getMessage()]);
     }
+} else {
+    echo json_encode(['status' => 'error', 'message' => 'Please enter your email and password.']);
+}
 ?>

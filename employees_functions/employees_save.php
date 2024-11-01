@@ -14,8 +14,7 @@
             $rol = $_POST['rol'];
 
             $full_name = $name ." ". $surname;
-            $plainPassword = 'password'; // La contraseña en texto plano que el usuario ingresa
-            $hashedPassword = password_hash($plainPassword, PASSWORD_DEFAULT);
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
             $stmt = $conn->prepare("INSERT INTO empleados (nombre, correo, rol, contra) VALUES (:fullname, :email, :rol, :password)");
             $stmt->bindParam(':fullname', $full_name);
