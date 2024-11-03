@@ -1,8 +1,62 @@
-.go_back {
-    margin: 2px;
+/* employees_details.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
 }
 
-a {
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.go_back {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.go_back button {
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.go_back button a {
+    color: white;
     text-decoration: none;
-    color: black;
+}
+
+.go_back button:hover {
+    background-color: #0056b3;
+}
+
+.details {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 600px;
+    margin: auto;
+}
+
+.details div {
+    margin-bottom: 15px;
+    font-size: 1.2em;
+    color: #555;
+}
+
+.details div strong {
+    color: #333;
+}
+
+@media (max-width: 600px) {
+    .details {
+        width: 90%;
+    }
 }

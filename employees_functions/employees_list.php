@@ -37,6 +37,7 @@
                         echo "<div class='row'>". htmlspecialchars(($row['rol'] == 1) ? "Gerente" : "Ejecutivo") ."</div>";
                         echo "<div class='row'><a href='employees_delete.php?id=". htmlspecialchars($row['id']). "' onclick=\"return confirm('¿Estás seguro de que deseas eliminar este empleado?');\">Eliminar</a></div>";
                         echo "<div class='row'><a href='employees_details.php?id=". htmlspecialchars($row['id']). "'>Detalles</a></div>";
+                        echo "<div class='row'><a href='employees_edit.php?id=". htmlspecialchars($row['id']). "'>Actualizar</a></div>";
                         echo "</div>";
                     }
                 }

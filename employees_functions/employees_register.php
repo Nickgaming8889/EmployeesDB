@@ -12,7 +12,7 @@
 <body>
     <h1>Register Employee</h1>
     <div class="go_back">
-        <button><a href="employees_list.php">List</a></button>
+        <button><a href="employees_list.php">List Employees</a></button>
     </div>
     <form id="formRegistrarEmpleado" action="employees_save.php" method="post">
         <div class="register_inputs">

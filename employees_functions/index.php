@@ -2,23 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="stylesheet" href="../styles/employees_login.css">
     <title>Welcome</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-        }
-        h1 {
-            color: #333;
-        }
-        .error {
-            color: red;
-        }
-        .message {
-            margin-top: 10px;
-            color: green;
-        }
-    </style>
 </head>
 <body>
     <h1>Welcome to Our Application</h1>
