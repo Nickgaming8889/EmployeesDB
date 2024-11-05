@@ -14,7 +14,7 @@
     <div class="go_back">
         <button><a href="employees_list.php">List Employees</a></button>
     </div>
-    <form id="formRegistrarEmpleado" action="employees_save.php" method="post">
+    <form id="formRegistrarEmpleado" action="employees_save.php" method="post" enctype="multipart/form-data">
         <div class="register_inputs">
             <div class="input">
                 <input type="text" name="name" id="name" placeholder="First Name">
@@ -36,6 +36,10 @@
                     <option value="2">Ejecutivo</option>
                 </select>
             </div>
+            <div class="input">
+                <label for="photo">Foto:</label>
+                <input type="file" name="photo" id="photo" accept="image/*">
+            </div>
         </div>
         <div class="save_register">
             <button type="submit" class="save_btn">Guardar</button>
@@ -43,83 +47,110 @@
         <div id="message" class="error-message"></div>
     </form>
 
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
-    $(document).ready(function() {
-        $('#email').on('blur', function() {
-            var email = $(this).val();
-            var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        $(document).ready(function() {
+            $('#email').on('blur', function() {
+                var email = $(this).val();
+                var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-            if (!emailPattern.test(email)) {
-                $('#emailMessage').text('Por favor, introduce un correo electrónico válido.').css('color', 'red');
-                return;
-            }
-
-            $.ajax({
-                type: 'POST',
-                url: 'validate_email.php',
-                data: { email: email },
-                dataType: 'json',
-                success: function(response) {
-                    if (response.error) {
-                        $('#emailMessage').text(response.error).css('color', 'red');
-                    } else if (response.exists) {
-                        $('#emailMessage').text('Este correo electrónico ya está en uso.').css('color', 'red');
-                    } else {
-                        $('#emailMessage').text('Este correo electrónico está disponible.').css('color', 'green');
-                    }
-                },
-                error: function() {
-                    $('#emailMessage').text('Error al validar el correo electrónico.').css('color', 'red');
+                if (!emailPattern.test(email)) {
+                    $('#emailMessage').text('Por favor, introduce un correo electrónico válido.').css('color', 'red');
+                    return;
                 }
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'validate_email.php',
+                    data: { email: email },
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.error) {
+                            $('#emailMessage').text(response.error).css('color', 'red');
+                        } else if (response.exists) {
+                            $('#emailMessage').text('Este correo electrónico ya está en uso.').css('color', 'red');
+                        } else {
+                            $('#emailMessage').text('Este correo electrónico está disponible.').css('color', 'green');
+                        }
+                    },
+                    error: function() {
+                        $('#emailMessage').text('Error al validar el correo electrónico.').css('color', 'red');
+                    }
+                });
             });
-        });
 
-        $('#formRegistrarEmpleado').on('submit', function(event) {
-        event.preventDefault();
+            $('#formRegistrarEmpleado').on('submit', function(event) {
+                event.preventDefault();
 
-        $('#message').text('').removeClass('error-message');
+                $('#message').text('').removeClass('error-message');
 
-        var name = $('#name').val();
-        var surname = $('#surname').val();
-        var email = $('#email').val();
-        var password = $('#password').val();
-        var rol = $('#rol').val();
+                var name = $('#name').val();
+                var surname = $('#surname').val();
+                var email = $('#email').val();
+                var password = $('#password').val();
+                var rol = $('#rol').val();
+                var photoFileName = ""; // Variable para guardar el nombre de la foto
 
-        if (name === "" || surname === "" || email === "" || password === "" || rol === "") {
-            $('#message').text('Todos los campos son obligatorios.').css('color', 'red');
-            mostrarMensajeTemporal('#message');
-            return;
-        }
+                // Comprobar que todos los campos estén llenos
+                if (name === "" || surname === "" || email === "" || password === "" || rol === "") {
+                    $('#message').text('Todos los campos son obligatorios.').css('color', 'red');
+                    mostrarMensajeTemporal('#message');
+                    return;
+                }
 
-        // Aquí se envían los datos del formulario
-        $.ajax({
-            type: 'POST',
-            url: 'employees_save.php',
-            data: {
-                name: name,
-                surname: surname,
-                email: email,
-                password: password,
-                rol: rol
-            },
-            success: function(response) {
-                // Si el registro es exitoso, redirigir a employees_list.php
-                window.location.href = 'employees_list.php';
-            },
-            error: function() {
-                $('#message').text('Error al registrar el empleado.').css('color', 'red');
-                mostrarMensajeTemporal('#message');
+                // Subir la imagen primero
+                var photoData = new FormData();
+                photoData.append('photo', $('#photo')[0].files[0]);
+
+                $.ajax({
+                    type: 'POST',
+                    url: 'updatePhoto.php',
+                    data: photoData,
+                    contentType: false,
+                    processData: false,
+                    dataType: 'json',
+                    success: function(photoResponse) {
+                        if (photoResponse.status === "success") {
+                            photoFileName = photoResponse.fileName; // Guardar el nombre del archivo
+                            $('#message').text('Foto subida correctamente.').css('color', 'green');
+
+                            // Ahora enviar los datos del formulario incluyendo el nombre de la foto
+                            $.ajax({
+                                type: 'POST',
+                                url: 'testing.php',
+                                data: {
+                                    name: name,
+                                    surname: surname,
+                                    email: email,
+                                    password: password,
+                                    rol: rol,
+                                    photo: photoFileName
+                                },
+                                success: function(response) {
+                                    // Si el registro es exitoso, redirigir a employees_list.php
+                                    window.location.href = 'employees_list.php';
+                                },
+                                error: function() {
+                                    $('#message').text('Error al registrar el empleado.').css('color', 'red');
+                                    mostrarMensajeTemporal('#message');
+                                }
+                            });
+                        } else {
+                            $('#message').text(photoResponse.message).css('color', 'red');
+                        }
+                    },
+                    error: function() {
+                        $('#message').text('Error al subir la foto.').css('color', 'red');
+                    }
+                });
+            });
+
+            function mostrarMensajeTemporal(selector) {
+                setTimeout(function() {
+                    $(selector).text('').removeClass('error-message');
+                }, 5000);
             }
         });
-    });
-
-    function mostrarMensajeTemporal(selector) {
-        setTimeout(function() {
-            $(selector).text('').removeClass('error-message');
-        }, 5000);
-    }
-    });
     </script>
 </body>
 </html>

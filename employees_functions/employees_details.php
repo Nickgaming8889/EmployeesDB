@@ -19,24 +19,45 @@
             $id = $_GET['id'];
 
             try {
+                // Conexión con la base de datos
                 $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
                 $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+                // Consulta para obtener los detalles del empleado
                 $stmt = $conn->prepare("SELECT * FROM empleados WHERE id = :idEmpleado");
                 $stmt->bindParam(':idEmpleado', $id, PDO::PARAM_INT);
                 $stmt->execute();
 
+                // Recuperar los resultados
                 $result = $stmt->fetch(PDO::FETCH_ASSOC);
-                
-                echo "<div>Name: ". htmlspecialchars($result['nombre'])."</div>";
-                echo "<div>Email: ". htmlspecialchars($result['correo'])."</div>";
-                echo "<div>Role: ". htmlspecialchars(($result['rol'] == 1) ? 'Gerente' : 'Ejecutivo')."</div>";
-                
+
+                if ($result) {
+                    // Mostrar la imagen del empleado si existe
+                    echo "<div class='foto'>";
+                    if (!empty($result['foto_nom']) && file_exists('../photos/' . $result['foto_nom'])) {
+                        // Mostrar la imagen desde la carpeta "uploads"
+                        echo "<img src='../uploads/" . htmlspecialchars($result['foto']) . "' alt='Foto de " . htmlspecialchars($result['nombre']) . "'>";
+                    } else {
+                        // Mostrar una imagen predeterminada si no existe
+                        echo "<img src='../uploads/default.jpg' alt='Imagen no disponible'>";
+                    }
+                    echo "</div>";
+
+                    // Mostrar los detalles del empleado
+                    echo "<div>Name: " . htmlspecialchars($result['nombre']) . "</div>";
+                    echo "<div>Email: " . htmlspecialchars($result['correo']) . "</div>";
+                    echo "<div>Role: " . htmlspecialchars(($result['rol'] == 1) ? 'Gerente' : 'Ejecutivo') . "</div>";
+                } else {
+                    echo "<p>Empleado no encontrado.</p>";
+                }
+
+                // Cerrar la conexión
                 $conn = null;
             } catch (PDOException $e) {
-                echo "Error: ". $e->getMessage();
+                echo "Error: " . $e->getMessage();
             }
         }
     ?>
+
 </body>
 </html>
