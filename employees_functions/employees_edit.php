@@ -56,6 +56,10 @@
                 <option value="2">Ejecutivo</option>
             </select>
         </div>
+        <div class="input">
+            <label for="photo">Foto:</label>
+            <input type="file" name="photo" id="photo" accept="image/*">
+        </div>
         <div class="save_update">
             <button type="submit" class="save_btn">Actualizar</button>
         </div>
