@@ -1,3 +1,12 @@
+<?php
+    session_start();
+    if (!isset($_SESSION['nombre'])) {
+        header("Location: index.php");
+        exit;
+    }
+    
+    $nombre = $_SESSION['nombre'];
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,6 +15,9 @@
     <title>Welcome</title>
 </head>
 <body>
-    <h3>Hola, bienvenido al sistema</h3>
+    <?php
+        include('menu.php');
+    ?>
+    <h3>Hola, bienvenido al sistema :D</h3>
 </body>
 </html>

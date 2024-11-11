@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="../styles/employees_login.css">
-    <title>Welcome</title>
+    <title>Log In</title>
 </head>
 <body>
-    <h1>Welcome to Our Application</h1>
+    <h1>Log In</h1>
 
     <h2>Login</h2>
     <form id="loginForm" method="POST">
