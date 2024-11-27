@@ -1,3 +1,12 @@
+<?php
+    session_start();
+    if (!isset($_SESSION['nombre'])) {
+        header("Location: index.php");
+        exit;
+    }
+
+    $nombre = $_SESSION['nombre'];
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +16,29 @@
     <title>Employees List</title>
 </head>
 <body>
+    <div class="nav_menu">
+        <div class="nav_welcome">
+            Bienvenido <?php echo htmlspecialchars($nombre) ?>  
+        </div>
+        <div class="nav_start">
+            <a href="dashboard.php">Inicio</a>
+        </div>
+        <div class="nav_employees">
+            <a href="employees_list.php">Empleados</a>
+        </div>
+        <div class="nav_products">
+            <a href="products/product_list.php">Productos</a>
+        </div>
+        <div class="nav_proms">
+            <a href="proms/prom_list.php">Promociones</a>
+        </div>
+        <div class="nav_orders">
+            <a href="orders/order_list.php">Pedidos</a>
+        </div>
+        <div class="nav_logout">
+            <a href="logout.php">Salir</a>
+        </div>
+    </div>
     <div class="table">
         <div class="title">
             <div class="column">
@@ -17,6 +49,9 @@
             </div>
             <div class="column">
                 Rol
+            </div>
+            <div class="column">
+                Acciones
             </div>
         </div>
             <?php
@@ -35,9 +70,11 @@
                         echo "<div class='row'>". htmlspecialchars($row['nombre']) ."</div>";
                         echo "<div class='row'>". htmlspecialchars($row['correo']) ."</div>";
                         echo "<div class='row'>". htmlspecialchars(($row['rol'] == 1) ? "Gerente" : "Ejecutivo") ."</div>";
-                        echo "<div class='row'><a href='employees_delete.php?id=". htmlspecialchars($row['id']). "' onclick='deleteEmployee()'>Eliminar</a></div>";
-                        echo "<div class='row'><a href='employees_details.php?id=". htmlspecialchars($row['id']). "'>Detalles</a></div>";
-                        echo "<div class='row'><a href='employees_edit.php?id=". htmlspecialchars($row['id']). "'>Actualizar</a></div>";
+                        echo "<div class='row'>";
+                        echo "<a href='employees_delete.php?id=". htmlspecialchars($row['id']). "' onclick='deleteEmployee()'>Eliminar</a>";
+                        echo "<a href='employees_details.php?id=". htmlspecialchars($row['id']). "'>Detalles</a>";
+                        echo "<a href='employees_edit.php?id=". htmlspecialchars($row['id']). "'>Actualizar</a>";
+                        echo "</div>";
                         echo "</div>";
                     }
                 }

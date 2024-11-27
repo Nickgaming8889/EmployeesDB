@@ -9,7 +9,7 @@
         $password = $_POST['password'];
 
         $full_name = $name .' '. $surname;
-        $passwordHash = password_hash($password, PASSWORD_BCRYPT);
+        $passwordHash = password_hash($password, PASSWORD_DEFAULT);
 
         // Photo upload handling
         if (isset($_FILES['photo']) && $_FILES['photo']['error'] == 0) {

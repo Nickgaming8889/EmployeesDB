@@ -1,0 +1,60 @@
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.go_back {
+    margin-bottom: 20px;
+}
+
+.go_back button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.go_back button:hover {
+    background-color: #0056b3;
+}
+
+.go_back a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+}
+
+.foto {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.foto img {
+    max-width: 300px;
+    height: auto;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+div {
+    margin: 10px 0;
+    font-size: 18px;
+    color: #555;
+}
+
+strong {
+    color: #333;
+}

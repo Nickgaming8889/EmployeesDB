@@ -18,8 +18,10 @@ $(document).ready(function() {
                     $('#emailMessage').text(response.error).css('color', 'red');
                 } else if (response.exists) {
                     $('#emailMessage').text('Este correo electrónico ya está en uso.').css('color', 'red');
+                    $('.save_btn').hide();
                 } else {
                     $('#emailMessage').text('Este correo electrónico está disponible.').css('color', 'green');
+                    $('.save_btn').show();
                 }
             },
             error: function() {
